@@ -1031,6 +1031,7 @@ class WebUI:
             raise NotFound, path + " does not exist"
 
         urls = self.store.get_package_urls(name, relative="../../packages")
+        # get required_python likely here
 
         if urls is None:
             raise NotFound, path + " does not have any releases"
@@ -1051,7 +1052,9 @@ class WebUI:
                 rel = ''
             href = cgi.escape(href, quote=True)
             text = cgi.escape(text)
-            html.append("""<a href="%s"%s>%s</a><br/>\n""" % (href, rel, text))
+            # parse include the right thing here.
+            python_requires = "data-requires-python='&gt3.0'"
+            html.append("""<a %s href="%s"%s>%s</a><br/>\n""" % (python_require, href, rel, text))
         html.append("</body></html>")
         html = ''.join(html)
         return html

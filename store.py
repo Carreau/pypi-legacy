@@ -726,7 +726,7 @@ class Store:
             url = self.gen_file_url(pyversion, name, fname, relative) + \
                 "#md5=" + md5
             file_urls.append((url, "internal", fname))
-
+        # this would need to also return pyversion.
         return sorted(file_urls)
 
     def get_uploaded_file_urls(self, name):
@@ -811,7 +811,7 @@ class Store:
         safe_execute(cursor, "SELECT name, last_serial FROM packages")
         return dict((n,i) for n, i in cursor.fetchall())
 
-    def get_packages_utf8(self):
+    def get_package_urlsget_packages_utf8(self):
         '''Fetch the complete list of package names, UTF-8 encoded
         '''
         cursor = self.get_cursor()
@@ -2012,6 +2012,7 @@ class Store:
     #
     def gen_file_url(self, pyversion, name, filename, prefix=None):
         '''Generate the URL for a given file download.'''
+        # PY version is passed here, is that the same than requires_python
         if not prefix:
             prefix = self.config.files_url
 
