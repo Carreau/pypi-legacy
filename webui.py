@@ -382,17 +382,18 @@ class WebUI:
         self.usercookie = None
         self.failed = None # error message if initialization already produced a failure
 
+        self.package_bucket = None
+        if self.config.database_aws_access_key_id and self.config.database_aws_secret_access_key:
+            self.s3conn = boto.s3.connect_to_region(
+                "us-west-2",
+                aws_access_key_id=self.config.database_aws_access_key_id,
+                aws_secret_access_key=self.config.database_aws_secret_access_key,
+            )
 
-        self.s3conn = boto.s3.connect_to_region(
-            "us-west-2",
-            aws_access_key_id=self.config.database_aws_access_key_id,
-            aws_secret_access_key=self.config.database_aws_secret_access_key,
-        )
-
-        self.package_bucket = self.s3conn.get_bucket(
-            self.config.database_files_bucket,
-            validate=False,
-        )
+            self.package_bucket = self.s3conn.get_bucket(
+                self.config.database_files_bucket,
+                validate=False,
+            )
 
         if self.config.database_docs_bucket is not None:
             self.docs_fs = NoDirS3FS(

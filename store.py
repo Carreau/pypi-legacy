@@ -5,10 +5,7 @@ import logging, string, datetime, calendar, binascii, urllib, urllib2, cgi
 import posixpath
 from collections import defaultdict
 import cPickle as pickle
-try:
-    import psycopg2
-except ImportError:
-    pass
+import psycopg2
 try:
     import sqlite3
     sqlite3_cursor = sqlite3.Cursor
