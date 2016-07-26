@@ -729,6 +729,28 @@ class Store:
         # this would need to also return pyversion.
         return sorted(file_urls)
 
+
+    def get_package_urls_and_pyrequires(self, name, relative=None):
+        '''Return all URLS (home, download, files) for a package,
+
+        Return list of (link, rel, label) or None if there are no releases.
+        '''
+        cursor = self.get_cursor()
+        file_urls = []
+
+        # uploaded files
+        safe_execute(cursor, '''select filename, python_version, md5_digest
+            from release_files where name=%s''', (name,))
+        for fname, pyversion, md5 in cursor.fetchall():
+            # Put files first, to have setuptools consider
+            # them before going to other sites
+            url = self.gen_file_url(pyversion, name, fname, relative) + \
+                "#md5=" + md5
+            file_urls.append((url, "internal", fname, pyversion))
+        # this would need to also return pyversion.
+        return sorted(file_urls)
+
+
     def get_uploaded_file_urls(self, name):
         cursor = self.get_cursor()
         urls = []
@@ -811,7 +833,7 @@ class Store:
         safe_execute(cursor, "SELECT name, last_serial FROM packages")
         return dict((n,i) for n, i in cursor.fetchall())
 
-    def get_package_urlsget_packages_utf8(self):
+    def get_packages_utf8(self):
         '''Fetch the complete list of package names, UTF-8 encoded
         '''
         cursor = self.get_cursor()
