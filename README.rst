@@ -32,14 +32,33 @@ PyPI will be available in your browser at http://localhost:8000
 Database Setup
 --------------
 
+
+Postgres
+~~~~~~~~
 To fill a database, run pkgbase_schema.sql on an empty Postgres database.
 Then run tools/demodata to populate the database with dummy data.
 
-For testing purposes, run tools/mksqlite to create packages.db. Set
-[database]driver to sqlite3, and [database]name to packages.db, then
-run tools/demodata to populate the database.
+Sqlite
+~~~~~~
 
-PyPI Requires the citext extension to be installed.
+For testing purposes, run the following to create a ``packages.db`` file at the
+root of the repository::
+
+    python2 tools/mksqlite.py 
+    
+Set ``[database]driver`` to ``sqlite3`` in ``config.ini``, and
+``[database]name`` to ``packages.db``::
+
+    [database]
+
+    driver = sqlite3
+    name = package.db
+
+
+
+Then run ``tools/demodata``    to populate the database.
+
+PyPI Requires the ``citext`` extension to be installed.
 
 TestPyPI Database Setup
 -----------------------
