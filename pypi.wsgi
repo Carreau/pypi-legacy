@@ -153,6 +153,7 @@ def site_fake(app, environ, start_response):
 if __name__ == '__main__':
     # very simple wsgi server so we can play locally
     from wsgiref.simple_server import make_server
-    httpd = make_server('', 8000, partial(site_fake, application))
-    print "Serving on port 8000..."
+    PORT = 8000
+    httpd = make_server('', PORT, partial(site_fake, application))
+    print "Serving on port %s..." % PORT
     httpd.serve_forever()

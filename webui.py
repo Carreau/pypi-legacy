@@ -254,6 +254,7 @@ def decode_form(form):
 
 
 def must_tls(fn):
+    return fn
     @functools.wraps(fn)
     def wrapped(self, *args, **kwargs):
         if self.env.get('HTTP_X_FORWARDED_PROTO') != 'https':
@@ -1055,7 +1056,7 @@ class WebUI:
             text = cgi.escape(text)
             # parse include the right thing here.
             python_requires = "data-requires-python='&gt3.0'"
-            html.append("""<a %s href="%s"%s>%s</a><br/>\n""" % (python_require, href, rel, text))
+            html.append("""<a %s href="%s"%s>%s</a><br/>\n""" % (python_requires, href, rel, text))
         html.append("</body></html>")
         html = ''.join(html)
         return html

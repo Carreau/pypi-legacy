@@ -35,8 +35,26 @@ Database Setup
 
 Postgres
 ~~~~~~~~
-To fill a database, run pkgbase_schema.sql on an empty Postgres database.
-Then run tools/demodata to populate the database with dummy data.
+
+To fill a database, run ``pkgbase_schema.sql`` on an empty Postgres database.
+Then run ``tools/demodata`` to populate the database with dummy data.
+
+To initialize an empty Postgres Database::
+
+  mkdir tmp
+  chmod 700 tmp
+  initdb -D tmp
+
+use the following to list all available postgres databases::
+
+   $ psql -l
+      Name    | Owner    | Encoding |   Collate   |    Ctype    |        Access privileges
+   -----------+----------+----------+-------------+-------------+----------------------------
+    postgres  | username | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+    template0 | username | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/username     +
+              |          |          |             |             | username=CTc/username
+    template1 | username | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/username     +
+              |          |          |             |             | username=CTc/username
 
 Sqlite
 ~~~~~~
