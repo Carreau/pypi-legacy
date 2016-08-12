@@ -254,7 +254,6 @@ def decode_form(form):
 
 
 def must_tls(fn):
-    return fn
     @functools.wraps(fn)
     def wrapped(self, *args, **kwargs):
         if self.env.get('HTTP_X_FORWARDED_PROTO') != 'https':
