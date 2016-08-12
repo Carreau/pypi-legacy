@@ -45,7 +45,7 @@ To initialize an empty Postgres Database::
   chmod 700 tmp
   initdb -D tmp
 
-use the following to list all available postgres databases::
+use the following to list all available postgres databases::    
 
    $ psql -l
       Name    | Owner    | Encoding |   Collate   |    Ctype    |        Access privileges
@@ -55,6 +55,10 @@ use the following to list all available postgres databases::
               |          |          |             |             | username=CTc/username
     template1 | username | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/username     +
               |          |          |             |             | username=CTc/username
+
+Populate the data with an example sql file, for example, ``example.sql`` that can be found on the warehouse repository
+
+
 
 Sqlite
 ~~~~~~
