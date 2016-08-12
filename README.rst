@@ -45,19 +45,53 @@ To initialize an empty Postgres Database::
   chmod 700 tmp
   initdb -D tmp
 
+The `initdb` step will likely tell you how to start a database server; likely
+something along the line of::
+
+  $ pg_ctl -D tmp -l logfile start
+
+You probably want to start that in a separate terminal, in the folder where you created the previous `tmp` directory. 
+
+
+
 use the following to list all available postgres databases::    
 
    $ psql -l
       Name    | Owner    | Encoding |   Collate   |    Ctype    |        Access privileges
    -----------+----------+----------+-------------+-------------+----------------------------
-    postgres  | username | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
-    template0 | username | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/username     +
-              |          |          |             |             | username=CTc/username
-    template1 | username | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/username     +
-              |          |          |             |             | username=CTc/username
+    postgres  | guido_vr | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+    template0 | guido_vr | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/guido_vr     +
+              |          |          |             |             | guido_vr=CTc/guido_vr
+    template1 | guido_vr | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/guido_vr     +
+              |          |          |             |             | guido_vr=CTc/guido_vr
 
-Populate the data with an example sql file, for example, ``example.sql`` that can be found on the warehouse repository
+Note the _name_ of the database, in our case above, ``postgres``, and th _user_
+name , in our case ``guido_vr``, they will be of use  to configure the database
+in the ``config.ini`` file.
 
+
+Populate the data with an example sql file, for example, ``example.sql`` that
+can be found on the warehouse repository::
+
+  pgsql -d postgres -f /path/to/example/file.sql
+
+Where ``postgres`` is the _name_ of the database noted above. 
+
+
+Set up the ``config.ini`` file ``[database]`` section, to connect to the postgres
+instance we just started::
+
+  [database]
+  
+  ;Postgres Database
+  host = localhost
+  port = 5432
+  name = postgres
+  user = guido_vr
+
+
+The default _host_ is likely ``localhost``, and the _port_ number ``5432`` as well. 
+adapt ``name`` and ``user`` with the value noted before. 
 
 
 Sqlite
