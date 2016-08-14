@@ -1039,7 +1039,7 @@ class WebUI:
             raise NotFound, path + " does not have any releases"
 
         html = []
-        html.append("""<!DOCTYPE html><html><head><title>Links for %s</title><meta name="api-version" value="2" /></head>"""
+        html.append("""<!DOCTYPE html><html><head><title>Links for %s</title></head>"""
                     % cgi.escape(path))
         html.append("<body><h1>Links for %s</h1>" % cgi.escape(path))
         for href, rel, text, requires_python in urls:
@@ -1048,16 +1048,12 @@ class WebUI:
                     href.startswith('http://www.python.org/pypi'):
                 # Suppress URLs that point to us
                 continue
-            if rel:
-                rel = ' rel="%s"' % rel
-            else:
-                rel = ''
             href = cgi.escape(href, quote=True)
             text = cgi.escape(text)
             data_attr = ''
             if requires_python:
                 data_attr = " data-requires-python='{}'".format(cgi.escape(requires_python)) 
-            html.append("""<a%s href="%s"%s>%s</a><br/>\n""" % (data_attr, href, rel, text))
+            html.append("""<a%s href="%s">%s</a><br/>\n""" % (data_attr, href, text))
         html.append("</body></html>")
         html = ''.join(html)
         return html
@@ -1100,7 +1096,7 @@ class WebUI:
 
         if path == '/':
             html = [
-                '<!DOCTYPE html><html><head><title>Simple Index</title><meta name="api-version" value="2" /></head>',
+                '<!DOCTYPE html><html><head><title>Simple Index</title></head>',
                 "<body>\n",
             ]
 
