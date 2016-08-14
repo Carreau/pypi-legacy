@@ -254,6 +254,7 @@ def decode_form(form):
 
 
 def must_tls(fn):
+    return fn
     @functools.wraps(fn)
     def wrapped(self, *args, **kwargs):
         if self.env.get('HTTP_X_FORWARDED_PROTO') != 'https':
@@ -1038,10 +1039,10 @@ class WebUI:
             raise NotFound, path + " does not have any releases"
 
         html = []
-        html.append("""<html><head><title>Links for %s</title><meta name="api-version" value="2" /></head>"""
+        html.append("""<!DOCTYPE html><html><head><title>Links for %s</title><meta name="api-version" value="2" /></head>"""
                     % cgi.escape(path))
         html.append("<body><h1>Links for %s</h1>" % cgi.escape(path))
-        for href, rel, text in urls:
+        for href, rel, text, requires_python in urls:
             if href.startswith('http://cheeseshop.python.org/pypi') or \
                     href.startswith('http://pypi.python.org/pypi') or \
                     href.startswith('http://www.python.org/pypi'):
@@ -1053,9 +1054,10 @@ class WebUI:
                 rel = ''
             href = cgi.escape(href, quote=True)
             text = cgi.escape(text)
-            # parse include the right thing here.
-            python_requires = "data-requires-python='&gt3.0'"
-            html.append("""<a %s href="%s"%s>%s</a><br/>\n""" % (python_requires, href, rel, text))
+            data_attr = ''
+            if requires_python:
+                data_attr = " data-requires-python='{}'".format(cgi.escape(requires_python)) 
+            html.append("""<a%s href="%s"%s>%s</a><br/>\n""" % (data_attr, href, rel, text))
         html.append("</body></html>")
         html = ''.join(html)
         return html
@@ -1098,7 +1100,7 @@ class WebUI:
 
         if path == '/':
             html = [
-                '<html><head><title>Simple Index</title><meta name="api-version" value="2" /></head>',
+                '<!DOCTYPE html><html><head><title>Simple Index</title><meta name="api-version" value="2" /></head>',
                 "<body>\n",
             ]
 

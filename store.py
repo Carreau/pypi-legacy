@@ -1,5 +1,8 @@
 ''' Implements a store of disutils PKG-INFO entries, keyed off name, version.
 '''
+
+from __future__ import print_function
+
 import sys, os, re, time, hashlib, random, types, math, stat, errno
 import logging, string, datetime, calendar, binascii, urllib, urllib2, cgi
 import posixpath
@@ -715,38 +718,25 @@ class Store:
         file_urls = []
 
         # uploaded files
-        safe_execute(cursor, '''select filename, python_version, md5_digest
-            from release_files where name=%s''', (name,))
-        for fname, pyversion, md5 in cursor.fetchall():
-            # Put files first, to have setuptools consider
-            # them before going to other sites
-            url = self.gen_file_url(pyversion, name, fname, relative) + \
-                "#md5=" + md5
-            file_urls.append((url, "internal", fname))
-        # this would need to also return pyversion.
-        return sorted(file_urls)
-
-
-    def get_package_urls_and_pyrequires(self, name, relative=None):
-        '''Return all URLS (home, download, files) for a package,
-
-        Return list of (link, rel, label) or None if there are no releases.
+        safe_execute(cursor, 
         '''
-        cursor = self.get_cursor()
-        file_urls = []
-
-        # uploaded files
-        safe_execute(cursor, '''select filename, python_version, md5_digest
-            from release_files where name=%s''', (name,))
-        for fname, pyversion, md5 in cursor.fetchall():
+        select filename, releases.requires_python, md5_digest
+        from release_files
+        inner join releases
+                on release_files.version=releases.version 
+                and release_files.name=releases.name
+        where release_files.name=%s
+        ''', (name,))
+        for fname, requires_python, md5 in cursor.fetchall():
             # Put files first, to have setuptools consider
             # them before going to other sites
-            url = self.gen_file_url(pyversion, name, fname, relative) + \
+            url = self.gen_file_url('<not used argument>', name, fname, relative) + \
                 "#md5=" + md5
-            file_urls.append((url, "internal", fname, pyversion))
-        # this would need to also return pyversion.
-        return sorted(file_urls)
+            file_urls.append((url, "internal", fname, requires_python))
 
+        # this would need to also return pyversion.
+        print('returning file urls', file_urls)
+        return sorted(file_urls)
 
     def get_uploaded_file_urls(self, name):
         cursor = self.get_cursor()
@@ -2852,5 +2842,5 @@ if __name__ == '__main__':
         store.update_upload_times()
         store.commit()
     else:
-        print "UNKNOWN COMMAND", sys.argv[2]
+        print("UNKNOWN COMMAND", sys.argv[2])
     store.close()
